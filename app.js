@@ -926,8 +926,10 @@ document.getElementById('menuBtn').addEventListener('click', () => {
   overlay.classList.toggle('active', sidebar.classList.contains('open'));
 });
 
-// =================== NAV LISTENERS ===================
+// =================== START APP ===================
 document.addEventListener('DOMContentLoaded', () => {
+
+  // nav click
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', e => {
       e.preventDefault();
@@ -935,6 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // menu mobile
   const menuBtn = document.getElementById('menuBtn');
   if (menuBtn) {
     menuBtn.addEventListener('click', () => {
@@ -956,10 +959,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // =================== INIT ===================
-  function init() {
-    navigate('dashboard');
-  }
-
-  init();
+  // start page
+  navigate('dashboard');
 });
