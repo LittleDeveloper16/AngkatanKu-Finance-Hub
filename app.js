@@ -938,42 +938,22 @@ document.querySelectorAll('.nav-item').forEach(item => {
 function init() {
   navigate('dashboard');
 }
-  const members = names.map((m, i) => ({ id: uid(), ...m, phone: '', joinDate: '2024-01-15', status: 'active', notes: '' }));
-  data.members = members;
 
-  // Seed kas settings
-  data.kasSettings = { period: 'Semester Genap 2024', amount: 10000, freq: 'monthly', start: '2024-01-01', end: '2024-06-30' };
+// =================== OPTIONAL RESET DATA ===================
+function resetAllData() {
+  localStorage.removeItem('ak_members');
+  localStorage.removeItem('ak_savings');
+  localStorage.removeItem('ak_kas_payments');
+  localStorage.removeItem('ak_kas_tagihan');
+  localStorage.removeItem('ak_kas_settings');
+  localStorage.removeItem('ak_debts');
+  localStorage.removeItem('ak_debt_payments');
+  localStorage.removeItem('ak_income');
+  localStorage.removeItem('ak_transactions');
+  localStorage.removeItem('ak_xp');
 
-  // Seed tagihan
-  const tagihan = members.map(m => ({ id: uid(), memberId: m.id, amount: 10000, note: 'Kas Semester Genap', date: '2024-03-01' }));
-  data.kasTagihan = tagihan;
-
-  // Seed some payments
-  const payments = [
-    { id: uid(), memberId: members[0].id, amount: 10000, date: '2024-03-05', note: '' },
-    { id: uid(), memberId: members[1].id, amount: 10000, date: '2024-03-06', note: '' },
-    { id: uid(), memberId: members[2].id, amount: 5000, date: '2024-03-08', note: 'Bayar sebagian' },
-    { id: uid(), memberId: members[3].id, amount: 10000, date: '2024-03-10', note: '' },
-  ];
-  data.kasPayments = payments;
-  payments.forEach(p => addTransaction('kas', p.memberId, p.amount, p.note));
-
-  // Seed savings
-  const savings = [
-    { id: uid(), memberId: members[0].id, amount: 50000, date: '2024-03-01', note: 'Nabung awal' },
-    { id: uid(), memberId: members[1].id, amount: 30000, date: '2024-03-03', note: '' },
-    { id: uid(), memberId: members[0].id, amount: 25000, date: '2024-03-10', note: '' },
-  ];
-  data.savings = savings;
-  savings.forEach(s => addTransaction('saving', s.memberId, s.amount, s.note));
-
-  // Seed income
-  data.income = [
-    { id: uid(), amount: 50000, date: '2024-03-01', source: 'Donasi', desc: 'Donasi dari alumni' },
-    { id: uid(), amount: 150000, date: '2024-03-15', source: 'Event', desc: 'Profit bazar kelas' },
-  ];
-
-  showToast('Data demo dimuat! Selamat datang 🎉', 'success');
+  location.reload();
 }
 
+// =================== START APP ===================
 init();
