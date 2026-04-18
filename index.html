@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AngkatanKu — Class Finance Hub</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="ambient-bg">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+    <div class="logo-text">
+      <span class="logo-title">AngkatanKu</span>
+      <span class="logo-sub">Finance Hub</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="#" class="nav-item" data-page="members"><i class="fa-solid fa-users"></i><span>Anggota</span></a>
+    <a href="#" class="nav-item" data-page="savings"><i class="fa-solid fa-piggy-bank"></i><span>Tabungan</span></a>
+    <a href="#" class="nav-item" data-page="kas"><i class="fa-solid fa-wallet"></i><span>Kas Angkatan</span></a>
+    <a href="#" class="nav-item" data-page="debts"><i class="fa-solid fa-file-invoice-dollar"></i><span>Hutang</span></a>
+    <a href="#" class="nav-item" data-page="income"><i class="fa-solid fa-arrow-trend-up"></i><span>Pemasukan</span></a>
+    <a href="#" class="nav-item" data-page="stats"><i class="fa-solid fa-chart-column"></i><span>Statistik</span></a>
+    <a href="#" class="nav-item" data-page="pyramid"><i class="fa-solid fa-trophy"></i><span>Pyramid</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="streak-badge"><i class="fa-solid fa-fire"></i> <span id="sidebar-streak">0</span> hari streak</div>
+  </div>
+</aside>
+
+<!-- Mobile topbar -->
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+  <span class="topbar-title">AngkatanKu</span>
+  <button class="notif-btn"><i class="fa-solid fa-bell"></i></button>
+</header>
+
+<!-- Main content -->
+<main class="main-content">
+
+  <!-- DASHBOARD PAGE -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <h1>Dashboard <span class="page-sub">Overview Keuangan</span></h1>
+      <div class="header-actions">
+        <button class="btn btn-ghost" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export</button>
+        <button class="btn btn-primary" onclick="openModal('modal-quick-pay')"><i class="fa-solid fa-plus"></i> Transaksi</button>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stats-grid">
+      <div class="stat-card gold">
+        <div class="stat-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Total Tabungan</span>
+          <span class="stat-value" id="stat-tabungan">Rp 0</span>
+        </div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Total Kas</span>
+          <span class="stat-value" id="stat-kas">Rp 0</span>
+        </div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Total Tunggakan</span>
+          <span class="stat-value" id="stat-tunggakan">Rp 0</span>
+        </div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Anggota Aktif</span>
+          <span class="stat-value" id="stat-members">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle: Pyramid + Today's Transactions -->
+    <div class="dashboard-mid">
+      <div class="pyramid-container card">
+        <h3 class="card-title"><i class="fa-solid fa-trophy"></i> Level Kelas</h3>
+        <div class="pyramid-wrap" id="dash-pyramid"></div>
+        <div class="level-label" id="dash-level-label">Stone</div>
+        <div class="level-progress-bar"><div class="level-bar-fill" id="dash-level-bar"></div></div>
+        <div class="level-xp" id="dash-level-xp">0 / 10 transaksi</div>
+      </div>
+      <div class="today-transactions card">
+        <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Transaksi Terbaru</h3>
+        <div class="tx-list" id="dash-tx-list">
+          <div class="empty-state"><i class="fa-solid fa-inbox"></i><p>Belum ada transaksi</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ranking -->
+    <div class="ranking-section card">
+      <h3 class="card-title"><i class="fa-solid fa-medal"></i> Top Pembayar Kas</h3>
+      <div class="ranking-list" id="dash-ranking"></div>
+    </div>
+  </section>
+
+  <!-- MEMBERS PAGE -->
+  <section class="page" id="page-members">
+    <div class="page-header">
+      <h1>Daftar Anggota</h1>
+      <div class="header-actions">
+        <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Cari anggota..." id="member-search" oninput="renderMembers()"></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-member')"><i class="fa-solid fa-user-plus"></i> Tambah</button>
+      </div>
+    </div>
+    <div class="members-grid" id="members-grid">
+      <div class="empty-state full"><i class="fa-solid fa-users"></i><p>Belum ada anggota. Tambahkan sekarang!</p></div>
+    </div>
+  </section>
+
+  <!-- SAVINGS PAGE -->
+  <section class="page" id="page-savings">
+    <div class="page-header">
+      <h1>Tabungan</h1>
+      <div class="header-actions">
+        <select class="filter-select" id="savings-filter-member" onchange="renderSavings()"><option value="">Semua Anggota</option></select>
+        <button class="btn btn-primary" onclick="openModal('modal-add-saving')"><i class="fa-solid fa-plus"></i> Tambah Nabung</button>
+      </div>
+    </div>
+    <!-- Per member summary -->
+    <div class="savings-summary" id="savings-summary"></div>
+    <!-- History -->
+    <div class="card mt-2">
+      <h3 class="card-title"><i class="fa-solid fa-list"></i> Riwayat Tabungan</h3>
+      <div class="table-wrap">
+        <table class="data-table" id="savings-table">
+          <thead><tr><th>Tanggal</th><th>Anggota</th><th>Jumlah</th><th>Catatan</th><th>Aksi</th></tr></thead>
+          <tbody id="savings-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- KAS PAGE -->
+  <section class="page" id="page-kas">
+    <div class="page-header">
+      <h1>Kas Angkatan</h1>
+      <div class="header-actions">
+        <button class="btn btn-ghost" onclick="openModal('modal-kas-settings')"><i class="fa-solid fa-gear"></i> Pengaturan Kas</button>
+        <button class="btn btn-gold" onclick="openModal('modal-bayar-kas')"><i class="fa-solid fa-money-bill-wave"></i> Bayar Kas</button>
+        <button class="btn btn-primary" onclick="openModal('modal-tagihan')"><i class="fa-solid fa-plus"></i> Tagihan</button>
+      </div>
+    </div>
+    <!-- Kas info bar -->
+    <div class="kas-info-bar" id="kas-info-bar"></div>
+    <!-- Kas table -->
+    <div class="card mt-2">
+      <h3 class="card-title"><i class="fa-solid fa-table"></i> Status Kas Per Anggota</h3>
+      <div class="table-wrap">
+        <table class="data-table kas-table" id="kas-table">
+          <thead><tr><th>Nama</th><th>Tagihan</th><th>Sudah Bayar</th><th>Sisa</th><th>Bayar Terakhir</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="kas-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEBTS PAGE -->
+  <section class="page" id="page-debts">
+    <div class="page-header">
+      <h1>Catatan Hutang</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="openModal('modal-add-debt')"><i class="fa-solid fa-plus"></i> Tambah Hutang</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table" id="debt-table">
+          <thead><tr><th>Nama</th><th>Alasan</th><th>Total</th><th>Dibayar</th><th>Sisa</th><th>Deadline</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="debt-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCOME PAGE -->
+  <section class="page" id="page-income">
+    <div class="page-header">
+      <h1>Pemasukan Lain</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="openModal('modal-add-income')"><i class="fa-solid fa-plus"></i> Tambah Pemasukan</button>
+      </div>
+    </div>
+    <div class="income-stats" id="income-stats"></div>
+    <div class="card mt-2">
+      <div class="table-wrap">
+        <table class="data-table" id="income-table">
+          <thead><tr><th>Tanggal</th><th>Sumber</th><th>Deskripsi</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+          <tbody id="income-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS PAGE -->
+  <section class="page" id="page-stats">
+    <div class="page-header">
+      <h1>Statistik</h1>
+    </div>
+    <div class="stats-page-grid">
+      <div class="card"><h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Kas Bulan Ini</h3><canvas id="chart-kas" height="200"></canvas></div>
+      <div class="card"><h3 class="card-title"><i class="fa-solid fa-chart-line"></i> Pertumbuhan Tabungan</h3><canvas id="chart-savings" height="200"></canvas></div>
+      <div class="card"><h3 class="card-title"><i class="fa-solid fa-ranking-star"></i> Top Rajin Bayar</h3><div id="chart-ranking"></div></div>
+      <div class="card"><h3 class="card-title"><i class="fa-solid fa-circle-dollar-to-slot"></i> Ringkasan Bulanan</h3><canvas id="chart-monthly" height="200"></canvas></div>
+    </div>
+  </section>
+
+  <!-- PYRAMID PAGE -->
+  <section class="page" id="page-pyramid">
+    <div class="page-header">
+      <h1>Pyramid Progress <span class="page-sub">Gamifikasi Kelas</span></h1>
+    </div>
+    <div class="pyramid-page-content">
+      <div class="pyramid-big-wrap card" id="pyramid-big"></div>
+      <div class="pyramid-levels-info">
+        <h3 class="card-title">Level Pyramid</h3>
+        <div class="level-cards" id="level-cards"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeAllModals()"></div>
+
+<!-- Add Member Modal -->
+<div class="modal" id="modal-add-member">
+  <div class="modal-header"><h3><i class="fa-solid fa-user-plus"></i> Tambah Anggota</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Nama Lengkap*</label><input type="text" id="m-name" placeholder="Nama lengkap"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Nickname</label><input type="text" id="m-nick" placeholder="Panggilan"></div>
+      <div class="form-group"><label>Kelas</label><input type="text" id="m-class" placeholder="XII IPA 1"></div>
+    </div>
+    <div class="form-group"><label>Nomor HP</label><input type="tel" id="m-phone" placeholder="+62..."></div>
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal Bergabung</label><input type="date" id="m-join"></div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="m-status"><option value="active">Aktif</option><option value="inactive">Non-aktif</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>Catatan</label><textarea id="m-notes" placeholder="Catatan tambahan..."></textarea></div>
+    <input type="hidden" id="m-edit-id">
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="saveMember()">Simpan</button>
+  </div>
+</div>
+
+<!-- Add Saving Modal -->
+<div class="modal" id="modal-add-saving">
+  <div class="modal-header"><h3><i class="fa-solid fa-piggy-bank"></i> Tambah Tabungan</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Anggota*</label><select id="s-member"></select></div>
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal</label><input type="date" id="s-date"></div>
+      <div class="form-group"><label>Jumlah (Rp)*</label><input type="number" id="s-amount" placeholder="50000"></div>
+    </div>
+    <div class="form-group"><label>Catatan</label><input type="text" id="s-note" placeholder="Optional"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="saveSaving()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+  </div>
+</div>
+
+<!-- Kas Settings Modal -->
+<div class="modal" id="modal-kas-settings">
+  <div class="modal-header"><h3><i class="fa-solid fa-gear"></i> Pengaturan Kas</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Nama Periode Kas</label><input type="text" id="ks-period" placeholder="Semester Ganjil 2024"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Jumlah Kas (Rp)</label><input type="number" id="ks-amount" placeholder="10000"></div>
+      <div class="form-group">
+        <label>Frekuensi</label>
+        <select id="ks-freq"><option value="daily">Harian</option><option value="weekly">Mingguan</option><option value="monthly" selected>Bulanan</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal Mulai</label><input type="date" id="ks-start"></div>
+      <div class="form-group"><label>Tanggal Akhir</label><input type="date" id="ks-end"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="saveKasSettings()">Terapkan</button>
+  </div>
+</div>
+
+<!-- Bayar Kas Modal -->
+<div class="modal" id="modal-bayar-kas">
+  <div class="modal-header"><h3><i class="fa-solid fa-money-bill-wave"></i> Bayar Kas</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Anggota*</label><select id="bk-member"></select></div>
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal</label><input type="date" id="bk-date"></div>
+      <div class="form-group"><label>Jumlah (Rp)*</label><input type="number" id="bk-amount" placeholder="10000"></div>
+    </div>
+    <div class="form-group"><label>Catatan</label><input type="text" id="bk-note" placeholder="Optional"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-gold" onclick="bayarKas()"><i class="fa-solid fa-check"></i> Bayar</button>
+  </div>
+</div>
+
+<!-- Tambah Tagihan Modal -->
+<div class="modal" id="modal-tagihan">
+  <div class="modal-header"><h3><i class="fa-solid fa-plus"></i> Tambah Tagihan Kas</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Anggota*</label><select id="tag-member"></select></div>
+    <div class="form-group"><label>Jumlah Tagihan (Rp)*</label><input type="number" id="tag-amount" placeholder="10000"></div>
+    <div class="form-group"><label>Keterangan</label><input type="text" id="tag-note" placeholder="Kas Bulan ini..."></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="tambahTagihan()">Simpan</button>
+  </div>
+</div>
+
+<!-- Add Debt Modal -->
+<div class="modal" id="modal-add-debt">
+  <div class="modal-header"><h3><i class="fa-solid fa-file-invoice-dollar"></i> Tambah Hutang</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Anggota*</label><select id="d-member"></select></div>
+    <div class="form-group"><label>Alasan Hutang*</label><input type="text" id="d-reason" placeholder="Pinjam uang, dll."></div>
+    <div class="form-row">
+      <div class="form-group"><label>Total Hutang (Rp)*</label><input type="number" id="d-amount" placeholder="100000"></div>
+      <div class="form-group"><label>Deadline</label><input type="date" id="d-deadline"></div>
+    </div>
+    <div class="form-group"><label>Catatan</label><textarea id="d-notes" placeholder="Optional"></textarea></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="saveDebt()">Simpan</button>
+  </div>
+</div>
+
+<!-- Pay Debt Modal -->
+<div class="modal" id="modal-pay-debt">
+  <div class="modal-header"><h3><i class="fa-solid fa-money-bill"></i> Bayar Hutang</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-group"><label>Jumlah Pembayaran (Rp)</label><input type="number" id="pd-amount" placeholder="50000"></div>
+    <div class="form-group"><label>Tanggal</label><input type="date" id="pd-date"></div>
+    <input type="hidden" id="pd-debt-id">
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-gold" onclick="payDebt()">Bayar</button>
+  </div>
+</div>
+
+<!-- Add Income Modal -->
+<div class="modal" id="modal-add-income">
+  <div class="modal-header"><h3><i class="fa-solid fa-arrow-trend-up"></i> Tambah Pemasukan</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal</label><input type="date" id="i-date"></div>
+      <div class="form-group"><label>Sumber</label><input type="text" id="i-source" placeholder="Donasi, Event, dll."></div>
+    </div>
+    <div class="form-group"><label>Deskripsi</label><input type="text" id="i-desc" placeholder="Deskripsi pemasukan"></div>
+    <div class="form-group"><label>Jumlah (Rp)*</label><input type="number" id="i-amount" placeholder="50000"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-primary" onclick="saveIncome()">Simpan</button>
+  </div>
+</div>
+
+<!-- Quick Pay Modal -->
+<div class="modal" id="modal-quick-pay">
+  <div class="modal-header"><h3><i class="fa-solid fa-bolt"></i> Transaksi Cepat</h3><button onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-body">
+    <div class="quick-pay-tabs">
+      <button class="qtab active" onclick="setQTab('kas',this)">Bayar Kas</button>
+      <button class="qtab" onclick="setQTab('saving',this)">Nabung</button>
+    </div>
+    <div id="qt-kas">
+      <div class="form-group"><label>Anggota</label><select id="qt-kas-member"></select></div>
+      <div class="form-group"><label>Jumlah (Rp)</label><input type="number" id="qt-kas-amount" placeholder="10000"></div>
+    </div>
+    <div id="qt-saving" style="display:none">
+      <div class="form-group"><label>Anggota</label><select id="qt-save-member"></select></div>
+      <div class="form-group"><label>Jumlah (Rp)</label><input type="number" id="qt-save-amount" placeholder="50000"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" onclick="closeAllModals()">Batal</button>
+    <button class="btn btn-gold" onclick="quickPay()"><i class="fa-solid fa-paper-plane"></i> Bayar</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
