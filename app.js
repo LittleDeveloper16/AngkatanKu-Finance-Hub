@@ -936,19 +936,8 @@ document.querySelectorAll('.nav-item').forEach(item => {
 
 // =================== INIT ===================
 function init() {
-  // Seed data if empty for demo
-  if (!data.members.length) seedDemoData();
   navigate('dashboard');
 }
-
-function seedDemoData() {
-  const names = [
-    { name: 'Ahmad Rizky', nick: 'Rizky', class: 'XII IPA 1' },
-    { name: 'Siti Rahayu', nick: 'Siti', class: 'XII IPA 1' },
-    { name: 'Budi Santoso', nick: 'Budi', class: 'XII IPA 2' },
-    { name: 'Dewi Lestari', nick: 'Dewi', class: 'XII IPA 2' },
-    { name: 'Eko Prasetyo', nick: 'Eko', class: 'XII IPS 1' },
-  ];
   const members = names.map((m, i) => ({ id: uid(), ...m, phone: '', joinDate: '2024-01-15', status: 'active', notes: '' }));
   data.members = members;
 
