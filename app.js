@@ -927,33 +927,39 @@ document.getElementById('menuBtn').addEventListener('click', () => {
 });
 
 // =================== NAV LISTENERS ===================
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', e => {
-    e.preventDefault();
-    navigate(item.dataset.page);
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      navigate(item.dataset.page);
+    });
   });
+
+  const menuBtn = document.getElementById('menuBtn');
+  if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar) return;
+
+      sidebar.classList.toggle('open');
+
+      let overlay = document.getElementById('sidebar-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sidebar-overlay';
+        overlay.className = 'sidebar-overlay';
+        overlay.onclick = closeSidebar;
+        document.body.appendChild(overlay);
+      }
+
+      overlay.classList.toggle('active', sidebar.classList.contains('open'));
+    });
+  }
+
+  // =================== INIT ===================
+  function init() {
+    navigate('dashboard');
+  }
+
+  init();
 });
-
-// =================== INIT ===================
-function init() {
-  navigate('dashboard');
-}
-
-// =================== OPTIONAL RESET DATA ===================
-function resetAllData() {
-  localStorage.removeItem('ak_members');
-  localStorage.removeItem('ak_savings');
-  localStorage.removeItem('ak_kas_payments');
-  localStorage.removeItem('ak_kas_tagihan');
-  localStorage.removeItem('ak_kas_settings');
-  localStorage.removeItem('ak_debts');
-  localStorage.removeItem('ak_debt_payments');
-  localStorage.removeItem('ak_income');
-  localStorage.removeItem('ak_transactions');
-  localStorage.removeItem('ak_xp');
-
-  location.reload();
-}
-
-// =================== START APP ===================
-init();
